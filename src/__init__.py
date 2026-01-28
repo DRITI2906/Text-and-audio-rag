@@ -1,0 +1,3 @@
+"""Multimodal Audio-Text Retrieval System."""
+
+__version__ = "0.1.0"

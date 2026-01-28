@@ -1,0 +1,56 @@
+# Audio Processing
+librosa==0.10.1
+soundfile==0.12.1
+pydub==0.25.1
+audioread==3.0.1
+
+# Embedding Models
+transformers==4.36.0
+torch==2.1.0
+torchaudio==2.1.0
+laion-clap==1.1.4
+sentence-transformers==2.2.2
+
+# Audio Models (for bonus approach)
+panns-inference==0.1.0
+openl3==0.4.1
+
+# Vector Database
+chromadb==0.4.18
+pinecone-client==3.0.0
+faiss-cpu==1.7.4
+qdrant-client==1.7.0
+
+# API & Web
+fastapi==0.108.0
+uvicorn==0.25.0
+pydantic==2.5.0
+python-multipart==0.0.6
+
+# Data Processing
+numpy==1.24.3
+pandas==2.1.4
+scikit-learn==1.3.2
+scipy==1.11.4
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+plotly==5.18.0
+
+# Utilities
+python-dotenv==1.0.0
+tqdm==4.66.1
+pyyaml==6.0.1
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Development
+jupyter==1.0.0
+ipykernel==6.27.1
+pytest==7.4.3
+black==23.12.1
+flake8==7.0.0
+
+# Logging
+loguru==0.7.2
