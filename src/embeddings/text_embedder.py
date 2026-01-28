@@ -6,7 +6,8 @@ from typing import Union, List
 from loguru import logger
 from sentence_transformers import SentenceTransformer
 
-from config.settings import settings
+from src.config import config
+
 
 
 class TextEncoder:
@@ -24,7 +25,7 @@ class TextEncoder:
             model_name: Sentence transformer model name
             device: Device to run model on ('cuda' or 'cpu')
         """
-        self.model_name = model_name or settings.TEXT_MODEL_NAME
+        self.model_name = model_name or config.TEXT_MODEL_NAME
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         
         logger.info(f"Initializing text encoder: {self.model_name}")

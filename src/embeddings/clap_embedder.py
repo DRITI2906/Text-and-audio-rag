@@ -11,7 +11,8 @@ try:
 except ImportError:
     logger.warning("laion_clap not installed. Install with: pip install laion-clap")
 
-from config.settings import settings
+from src.config import config
+
 
 
 class CLAPEmbedder:
@@ -31,7 +32,7 @@ class CLAPEmbedder:
             device: Device to run model on ('cuda' or 'cpu')
             enable_fusion: Whether to enable fusion in CLAP model
         """
-        self.model_name = model_name or settings.CLAP_MODEL_NAME
+        self.model_name = model_name or config.CLAP_MODEL_NAME
         self.device = device or ('cuda' if torch.cuda.is_available() else 'cpu')
         self.enable_fusion = enable_fusion
         

@@ -1,170 +1,144 @@
-%SAME%
+# Multimodal Audio-Text Retrieval System
 
-## 🎯 Project Overview
+A production-ready system for indexing and querying audio samples using text queries through multimodal embeddings.
 
-This system enables seamless retrieval and matching between text queries and audio samples by creating embeddings that represent both modalities in a shared space. The project explores multiple embedding approaches and evaluates their performance on audio samples scraped from Splice.com.
+## 🎯 Overview
 
-## ✨ Features
-
-- **Multimodal Embeddings**: Text and audio represented in common embedding space
-- **Dual Approach**: CLAP-based and audio-only embedding models
-- **Natural Language Queries**: Chatbot interface for intuitive sample retrieval
-- **Vector Database**: Efficient similarity search and indexing
-- **Model Comparison**: Confusion matrices and performance metrics
-- **RESTful API**: Easy integration and deployment
-
-## 📊 Dataset
-
-- **Source**: Splice.com
-- **Classes**: Keys, Drums
-- **Samples**: 20 from each class (40 total)
-- **Collection Method**: Browser extension
-
-## 🏗️ Architecture
-
-### Components
-
-1. **Scraper**: Browser extension for Splice.com data collection
-2. **Embedding Models**: CLAP and audio-only approaches
-3. **Vector Database**: ChromaDB/Pinecone/FAISS for indexing
-4. **Retrieval System**: Query processing and similarity search
-5. **Chatbot**: Natural language interface
-6. **Evaluation**: Model comparison and metrics
-
-### Embedding Approaches
-
-#### Approach 1: CLAP-Based
-- Uses CLAP (Contrastive Language-Audio Pretraining)
-- Direct text-audio alignment in shared space
-
-#### Approach 2: Audio-Only (Bonus)
-- Audio embeddings: PANNs, VGGish, or Wav2Vec2
-- Text alignment using sentence transformers
+This system creates a common embedding space for text and audio, enabling natural language queries to retrieve relevant audio samples. It supports two approaches:
+1. **CLAP**: Unified text-audio embeddings
+2. **Audio-Only**: Separate audio embeddings with text alignment
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Python 3.9+
-- pip or conda
-- Chrome/Firefox browser (for scraping)
-
-### Installation
+### 1. Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# Clone repository
+git clone https://github.com/DRITI2906/Text-and-audio-rag.git
 cd Text-and-audio-rag
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Download pretrained models
-python scripts/download_models.py
-
-# Set up environment variables
+# Configure environment
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your settings
 ```
 
-### Usage
+### 2. Collect Data
 
-#### 1. Collect Data
+Place 40 audio samples (20 drums + 20 keys) in:
+- `data/raw/drums/` - drum_01.wav through drum_20.wav
+- `data/raw/keys/` - key_01.wav through key_20.wav
+
+Create `data/metadata/samples.csv` with sample metadata.
+
+### 3. Build Index
+
 ```bash
-# Install browser extension from scraper/browser_extension/
-# Use extension to scrape samples from Splice.com
+python scripts/build_index.py
 ```
 
-#### 2. Generate Embeddings
+### 4. Query Samples
+
 ```bash
-python scripts/process_data.py
-python scripts/generate_embeddings.py --model clap
-python scripts/generate_embeddings.py --model audio_only  # Bonus approach
+# Interactive chatbot
+python app/chatbot.py
+
+# Or start API server
+uvicorn app.api:app --reload
+# Then visit http://localhost:8000/docs
 ```
 
-#### 3. Index Database
+### 5. Run Experiments
+
 ```bash
-python scripts/index_database.py
+# Evaluate single model
+python scripts/evaluate_models.py
+
+# Compare multiple models
+python scripts/run_experiments.py
 ```
-
-#### 4. Run Chatbot
-```bash
-# Start API server
-uvicorn api.app:app --reload
-
-# Or use the chatbot directly
-python chatbot/bot.py
-```
-
-#### 5. Evaluate Models
-```bash
-python scripts/run_evaluation.py
-```
-
-## 📝 Example Queries
-
-```python
-# Text queries
-"Give me drum samples"
-"Find keys in C major"
-"Show me upbeat drum loops around 120 BPM"
-"Mellow piano samples"
-```
-
-## 🧪 Evaluation
-
-The system generates confusion matrices comparing:
-- CLAP vs. Audio-only approaches
-- Different audio encoders (PANNs, VGGish, etc.)
-- Text-to-audio retrieval accuracy
-
-Results are saved in `outputs/results/`
 
 ## 📁 Project Structure
 
 ```
-Text-and-audio-rag/
-├── config/              # Configuration files
-├── data/                # Raw and processed data
-├── scraper/             # Splice.com scraper
-├── models/              # Embedding models
-├── embeddings/          # Embedding generation
-├── database/            # Vector database
-├── retrieval/           # Query and retrieval
-├── chatbot/             # Chatbot interface
-├── evaluation/          # Metrics and evaluation
-├── api/                 # REST API
-├── notebooks/           # Jupyter notebooks
-├── scripts/             # Utility scripts
-└── outputs/             # Results and logs
+├── src/                    # Source code
+│   ├── config.py          # Configuration
+│   ├── data/              # Data loading & preprocessing
+│   ├── embeddings/        # CLAP, audio-only, text embedders
+│   ├── indexing/          # FAISS vector store
+│   ├── retrieval/         # Query parsing & RAG pipeline
+│   ├── evaluation/        # Metrics & confusion matrices
+│   ├── experiments/       # Experiment scripts
+│   └── utils/             # Utilities
+├── app/                   # Applications
+│   ├── api.py            # FastAPI server
+│   ├── chatbot.py        # Interactive chatbot
+│   └── ui.py             # UI wrapper
+├── scripts/              # Utility scripts
+├── notebooks/            # Jupyter notebooks
+├── data/                 # Data directory
+└── results/              # Evaluation results
 ```
 
-## 🛠️ Technology Stack
+## 🔧 Configuration
 
-- **Audio Processing**: librosa, soundfile, pydub
-- **ML Models**: transformers, CLAP, sentence-transformers
-- **Vector DB**: ChromaDB, Pinecone, FAISS
-- **API**: FastAPI, uvicorn
-- **Evaluation**: scikit-learn, matplotlib, seaborn
+Edit `.env` file:
 
-## 📊 Results
+```bash
+# Model Selection
+EMBEDDING_MODEL=clap
 
-Evaluation results and confusion matrices will be available in `outputs/results/` after running experiments.
+# Vector Store
+VECTOR_STORE_TYPE=faiss
+DISTANCE_METRIC=cosine
+
+# Audio Processing
+SAMPLE_RATE=44100
+AUDIO_DURATION=10
+
+# Retrieval
+TOP_K_RESULTS=10
+SIMILARITY_THRESHOLD=0.7
+```
+
+## 📊 Features
+
+- ✅ Multimodal embeddings (text + audio)
+- ✅ FAISS-based similarity search
+- ✅ Natural language queries
+- ✅ Metadata filtering
+- ✅ Confusion matrix evaluation
+- ✅ REST API
+- ✅ Interactive chatbot
+
+## 🧪 Evaluation
+
+The system generates:
+- Confusion matrices comparing models
+- Precision@K, Recall@K, MAP, NDCG metrics
+- Per-class performance analysis
+
+Results saved to `results/` directory.
+
+## 📝 Example Queries
+
+```python
+"give me drum samples"
+"piano keys in C major"
+"upbeat drum loops around 120 BPM"
+"mellow synthesizer sounds"
+```
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions welcome! Please submit pull requests.
 
 ## 📄 License
 
 MIT License
-
-## 🙏 Acknowledgments
-
-- Splice.com for audio samples
-- LAION for CLAP model
-- Open-source audio embedding models

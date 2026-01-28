@@ -7,7 +7,8 @@ from pathlib import Path
 from typing import Union, List, Optional
 from loguru import logger
 
-from config.settings import settings
+from src.config import config
+
 
 
 class AudioOnlyEmbedder:
